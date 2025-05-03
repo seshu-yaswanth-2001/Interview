@@ -14,10 +14,25 @@
  * OUTPUT:- { "x": 1, "y.z.k": 5}
  */
 
-function flattenObject(obj) {
-  console.log("Working");
+function flattenObject(obj, parentKey = "", result = {}) {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const fullkey = parentKey ? `${parentKey}.${key}` : key;
+      const value = obj[key];
+      if (
+        value !== null &&
+        typeof value === "object" &&
+        !Array.isArray(value)
+      ) {
+        flattenObject(value, fullkey, result);
+      } else {
+        result[fullkey] = value;
+      }
+    }
+  }
+  console.log(result);
 }
 
-const obj1 = { a: { b: 1 } };
+const obj1 = { a: { b: 1 }, c: { d: { e: { f: 2 } } } };
 
 flattenObject(obj1);
